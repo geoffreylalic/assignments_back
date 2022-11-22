@@ -14,7 +14,7 @@ function getAssignments(req, res){
 // Récupérer un assignment par son id (GET)
 function getAssignment(req, res){
     let assignmentId = req.params.id;
-    Assignment.find({"_id" : MongoDB.ObjectId(assignmentId)}, (err, assignment) =>{
+    Assignment.findOne({"_id" : MongoDB.ObjectId(assignmentId)}, (err, assignment) =>{
         if(err){res.send(err)}
         res.send(assignment)
     })
