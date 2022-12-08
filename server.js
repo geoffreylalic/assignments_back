@@ -44,12 +44,12 @@ let port = process.env.PORT || 8010;
 const prefix = '/api';
 
 // List, create assignment
-app.route(prefix + '/assignments')
+app.route(prefix + '/assignments/')
   .get(assignment.getAssignments)
   .post(assignment.postAssignment)
 
 // get, update, delete assignement
-app.route(prefix + '/assignment/:id')
+app.route(prefix + '/assignments/:id/')
   .get(assignment.getAssignment)
   .delete(assignment.deleteAssignment)
   .put(assignment.updateAssignment);

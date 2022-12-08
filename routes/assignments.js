@@ -18,10 +18,6 @@ function getAssignment(req, res){
         if(err){res.send(err)}
         res.send(assignment)
     })
-    // Assignment.findOne({id: assignmentId}, (err, assignment) =>{
-    //     if(err){res.send(err)}
-    //     res.send(assignment)
-    // })
 }
 
 // Ajout d'un assignment (POST)
@@ -32,9 +28,9 @@ function postAssignment(req, res){
     assignment.professeur = req.body.professeur;
     assignment.dateDeRendu = req.body.dateDeRendu;
     assignment.statut = req.body.statut;
-    assignment.description = req.body.statut;
+    assignment.description = req.body.description;
 
-    console.log("POST assignment reçu :");
+    console.log("POST assignment reçu :", assignment);
 
     assignment.save( (err) => {
         if(err){

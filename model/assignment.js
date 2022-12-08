@@ -8,7 +8,7 @@ let AssignmentSchema = Schema({
     dateDeRendu: Date,
     nom: String,
     statut: String,
-    desription: String,
+    description: String,
 });
 
 // C'est à travers ce modèle Mongoose qu'on pourra faire le CRUD
