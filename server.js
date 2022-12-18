@@ -52,7 +52,8 @@ app.route(prefix + '/assignments/')
 app.route(prefix + '/assignments/:id/')
   .get(assignment.getAssignment)
   .delete(assignment.deleteAssignment)
-  .put(assignment.updateAssignment);
+  .put(assignment.updateAssignment)
+  .patch(assignment.updateAssignment)
 
 app.route(prefix + '/assignments')
 
