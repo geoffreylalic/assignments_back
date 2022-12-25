@@ -6,10 +6,8 @@ let professors = require('./routes/professors');
 
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-//mongoose.set('debug', true);
 
 // remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud s
-// const uri = 'mongodb+srv://mb:Geoffrey0151@cluster0.zqtee.mongodb.net/assignments?retryWrites=true&w=majority';
 const uri = 'mongodb+srv://Geoffrey:AdminAssignments@atlascluster.th5zxfl.mongodb.net/?retryWrites=true&w=majority'
 const options = {
   useNewUrlParser: true,

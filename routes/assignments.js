@@ -1,9 +1,21 @@
 let Assignment = require('../model/assignment');
 let MongoDB = require('mongodb')
+const path = require("path");
 
 // Récupérer tous les assignments (GET)
 function getAssignments(req, res) {
-    Assignment.find((err, assignments) => {
+    const params = req.query
+    console.log(params)
+    if ((params.name !== undefined)) {
+        console.log("name --- ", params.name)
+    }
+    if (params.professor !== undefined) {
+        console.log("professor", params.professor)
+    }
+    if (params.statut !== undefined) {
+        console.log("statut", params.statut)
+    }
+    Assignment.find({}, req.query, (err, assignments) => {
         if (err) {
             res.send(err)
         }
@@ -51,7 +63,7 @@ function postAssignment(req, res) {
 // Update d'un assignment (PUT)
 function updateAssignment(req, res) {
     console.log("UPDATE : ");
-    Assignment.findByIdAndUpdate(req.body._id, req.body, (err, assignment) => {        
+    Assignment.findByIdAndUpdate(req.body._id, req.body, (err, assignment) => {
         if (err) {
             console.log("error", err)
             res.json({ error: err })
