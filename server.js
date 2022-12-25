@@ -2,6 +2,7 @@ let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
 let assignment = require('./routes/assignments');
+let professors = require('./routes/professors');
 
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -56,6 +57,10 @@ app.route(prefix + '/assignments/:id/')
   .patch(assignment.updateAssignment)
 
 app.route(prefix + '/assignments')
+
+app.route(prefix + '/professors/')
+  .get(professors.getProfessors)
+app.route(prefix + '/professors')
 
 
 
