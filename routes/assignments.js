@@ -2,25 +2,53 @@ let Assignment = require('../model/assignment');
 let MongoDB = require('mongodb')
 const path = require("path");
 
+const STATUTS_OPTIONS = ['à faire', 'en cours', 'finit', 'rendu',]
+
 // Récupérer tous les assignments (GET)
-function getAssignments(req, res) {
-    const params = req.query
-    console.log(params)
-    if ((params.name !== undefined)) {
-        console.log("name --- ", params.name)
-    }
-    if (params.professor !== undefined) {
-        console.log("professor", params.professor)
-    }
-    if (params.statut !== undefined) {
-        console.log("statut", params.statut)
-    }
-    Assignment.find({}, req.query, (err, assignments) => {
-        if (err) {
-            res.send(err)
+async function getAssignments(req, res) {
+    try {
+        // pagination
+        let page = parseInt(req.query.page) - 1 || 0
+        let limit = parseInt(req.query.pageSize) || 10
+        // filering
+        let searchAssignment = req.query.nom || ""
+        let searchProfesseur = req.query.professeur || ""
+        let statuts = req.query.statuts || 'All'
+
+        statuts === 'All' ? (statuts = [...STATUTS_OPTIONS]) : (statuts = req.query.statuts.split(","))
+        console.log('statuts', statuts)
+        const assignments = await Assignment.find({
+            nom: {
+                $regex: searchAssignment,
+                $options: 'i'
+            },
+            professeur: {
+                $regex: searchProfesseur,
+                $options: 'i'
+            }
+        })
+            .where('statut')
+            .in([...statuts])
+            .skip(page * limit)
+            .limit(limit)
+        const total = await Assignment.countDocuments({
+            statut: { $in: [...STATUTS_OPTIONS] },
+            nom: { $regex: searchAssignment, $options: 'i' },
+            professeur: { $regex: searchProfesseur, $options: 'i' },
+        })
+        const response = {
+            error: false,
+            total,
+            page: page + 1,
+            limit,
+            assignments
         }
-        res.send(assignments);
-    });
+        res.status(200).json(response)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: true, message: 'Internal Server Error' })
+    }
+
 }
 
 // Récupérer un assignment par son id (GET)
@@ -31,7 +59,7 @@ function getAssignment(req, res) {
             res.send(err)
         }
         else if (assignment === null) {
-            res.json({ error: 'Assignement not found.' })
+            res.status(400).json({ error: 'Assignement not found.' })
         }
         else {
             res.send(assignment)
@@ -81,7 +109,6 @@ function updateAssignment(req, res) {
 // suppression d'un assignment (DELETE)
 function deleteAssignment(req, res) {
     Assignment.findByIdAndRemove(req.params.id, (err, assignment) => {
-        console.log("---- ", assignment)
         if (err) {
             res.json({ error: 'Assignement not found.' })
         } else if (assignment === null) {

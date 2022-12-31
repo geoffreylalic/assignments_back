@@ -6,3 +6,5 @@ Cependant, l'api des professeurs n'est qu'un simple GET qui liste les différent
 Sur le front au lieu coder en dur les noms des professeurs disponibles, j'ai créé une api qui permet de récupérer la liste des professeurs. Ceci permettrai de continuer l'api professeur et de faire évolué l'application front et back en créant les différentes requetes CRUD sur les profs.
 
 Images récupérer dans : https://univ-cotedazur.fr/miage/a-propos-de-la-miage/lequipe-de-la-miage-nice
+
+Pagination et filtering : https://www.youtube.com/watch?v=0T4GsMYnVN4

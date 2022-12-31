@@ -3,6 +3,7 @@ let app = express();
 let bodyParser = require('body-parser');
 let assignment = require('./routes/assignments');
 let professors = require('./routes/professors');
+let users = require('./routes/users');
 
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -59,6 +60,19 @@ app.route(prefix + '/assignments')
 app.route(prefix + '/professors/')
   .get(professors.getProfessors)
 app.route(prefix + '/professors')
+
+app.route(prefix + '/users/')
+  .get(users.getUsers)
+  .post(users.registerUser)
+
+// get, update, delete assignement
+app.route(prefix + '/users/:id/')
+  .get(users.getUserDetail)
+  .delete(users.deleteUser)
+  .put(users.updateUser)
+  .patch(users.updateUser)
+
+app.route(prefix + '/users')
 
 
 
