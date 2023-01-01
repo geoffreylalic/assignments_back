@@ -4,6 +4,7 @@ let bodyParser = require('body-parser');
 let assignment = require('./routes/assignments');
 let professors = require('./routes/professors');
 let users = require('./routes/users');
+let verifyToken = require('./auth/authentication')
 
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -45,35 +46,36 @@ const prefix = '/api';
 
 // List, create assignment
 app.route(prefix + '/assignments/')
-  .get(assignment.getAssignments)
-  .post(assignment.postAssignment)
+  .get(verifyToken, assignment.getAssignments)
+  .post(verifyToken, assignment.postAssignment)
 
 // get, update, delete assignement
 app.route(prefix + '/assignments/:id/')
-  .get(assignment.getAssignment)
-  .delete(assignment.deleteAssignment)
-  .put(assignment.updateAssignment)
-  .patch(assignment.updateAssignment)
-
-app.route(prefix + '/assignments')
+  .get(verifyToken, verifyToken, assignment.getAssignment)
+  .delete(verifyToken, assignment.deleteAssignment)
+  .put(verifyToken, assignment.updateAssignment)
+  .patch(verifyToken, assignment.updateAssignment)
 
 app.route(prefix + '/professors/')
-  .get(professors.getProfessors)
-app.route(prefix + '/professors')
+  .get(verifyToken, professors.getProfessors)
 
-app.route(prefix + '/users/')
-  .get(users.getUsers)
-  .post(users.registerUser)
+app.route(prefix + '/users/') // add admin permissions
+  .get(verifyToken, users.getUsers)
 
-// get, update, delete assignement
+// USER GET, DELETE, UPDATE
 app.route(prefix + '/users/:id/')
-  .get(users.getUserDetail)
-  .delete(users.deleteUser)
-  .put(users.updateUser)
-  .patch(users.updateUser)
+  .get(verifyToken, users.getUserDetail)
+  .delete(verifyToken, users.deleteUser)
+  .put(verifyToken, users.updateUser)
+  .patch(verifyToken, users.updateUser)
 
-app.route(prefix + '/users')
-
+// authentication
+app.route(prefix + '/register')
+  .post(users.registerUser)
+app.route(prefix + '/login/')
+  .post(users.loginUser)
+app.route(prefix + '/logout/')
+  .post(users.logoutUser)
 
 
 // On démarre le serveur
