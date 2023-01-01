@@ -46,7 +46,7 @@ async function getAssignments(req, res) {
         res.status(200).json(response)
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: true, message: 'Internal Server Error' })
+        res.status(500).json('Internal Server Error')
     }
 
 }
@@ -56,13 +56,13 @@ function getAssignment(req, res) {
     let assignmentId = req.params.id;
     Assignment.findOne({ "_id": MongoDB.ObjectId(assignmentId) }, (err, assignment) => {
         if (err) {
-            res.send(err)
+            res.status(500).send(err)
         }
         else if (assignment === null) {
-            res.status(400).json({ error: 'Assignement not found.' })
+            res.status(404).json('Assignement not found.')
         }
         else {
-            res.send(assignment)
+            res.status(200).send(assignment)
         }
     })
 }
@@ -82,9 +82,9 @@ function postAssignment(req, res) {
 
     assignment.save((err) => {
         if (err) {
-            res.json({ error: 'Cannot post assignment' })
+            res.status(500).send('Cannot create assignment');
         }
-        res.json({ message: `${assignment.nom} saved!` })
+        res.status(201).send(`${assignment.nom} saved!`)
     })
 }
 
@@ -94,14 +94,13 @@ function updateAssignment(req, res) {
     Assignment.findByIdAndUpdate(req.body._id, req.body, (err, assignment) => {
         if (err) {
             console.log("error", err)
-            res.json({ error: err })
+            res.status(500).send(err)
         }
         else if (assignment === null) {
-            res.json({ error: 'Assignment not found.' })
+            res.status(404).send('Assignment not found.')
         } else {
-            res.json({ message: 'Assignment updated.' })
+            res.status(201).send('Assignment updated.')
         }
-
     });
 
 }
@@ -110,15 +109,12 @@ function updateAssignment(req, res) {
 function deleteAssignment(req, res) {
     Assignment.findByIdAndRemove(req.params.id, (err, assignment) => {
         if (err) {
-            res.json({ error: 'Assignement not found.' })
+            res.status(500).send('Cannot delete assignment.')
         } else if (assignment === null) {
-            res.json({ error: 'Assignement not found.' })
-        }
-        else if (assignment === undefined) {
-            res.json({ error: 'Assignement not found.' })
+            res.status(404).send('Assignment not found.')
         }
         else {
-            res.json({ message: `${assignment.nom} deleted.` });
+            res.status(201).send('Assignment deleted.')
         }
     })
 }

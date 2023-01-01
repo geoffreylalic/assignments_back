@@ -19,14 +19,15 @@ function loginUser(req, res) {
             expiresIn: 86400 // expires in 24 hours
         });
 
-        res.status(200).send({ 
+        res.status(200).send({
             user: {
                 name: user.name,
                 lastName: user.lastName,
                 email: user.email,
                 year: user.year,
             },
-            token: token });
+            token: token
+        });
     });
 }
 

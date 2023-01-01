@@ -5,6 +5,7 @@ let assignment = require('./routes/assignments');
 let professors = require('./routes/professors');
 let users = require('./routes/users');
 let verifyToken = require('./auth/authentication')
+var cors = require('cors');
 
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -39,6 +40,13 @@ app.use(function (req, res, next) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// CORS ERROR allow all
+const corsOpts = {
+  origin: '*',
+};
+
+app.use(cors(corsOpts));
+
 let port = process.env.PORT || 8010;
 
 // les routes
@@ -51,13 +59,13 @@ app.route(prefix + '/assignments/')
 
 // get, update, delete assignement
 app.route(prefix + '/assignments/:id/')
-  .get(verifyToken, verifyToken, assignment.getAssignment)
+  .get(verifyToken, assignment.getAssignment)
   .delete(verifyToken, assignment.deleteAssignment)
   .put(verifyToken, assignment.updateAssignment)
   .patch(verifyToken, assignment.updateAssignment)
 
 app.route(prefix + '/professors/')
-  .get(verifyToken, professors.getProfessors)
+  .get(professors.getProfessors)
 
 app.route(prefix + '/users/') // add admin permissions
   .get(verifyToken, users.getUsers)
