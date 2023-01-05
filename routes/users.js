@@ -10,7 +10,7 @@ let config = require('../config');
 function loginUser(req, res) {
     User.findOne({ email: req.body.email }, function (err, user) {
         if (err) return res.status(500).send('Error on the server.');
-        if (!user) return res.status(404).send('No user found.');
+        if (!user) return res.status(404).send('Authentication failed.');
 
         let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
@@ -21,6 +21,7 @@ function loginUser(req, res) {
 
         res.status(200).send({
             user: {
+                id: user._id,
                 name: user.name,
                 lastName: user.lastName,
                 email: user.email,
@@ -79,7 +80,15 @@ function deleteUser(req, res) {
 function updateUser(req, res) {
     User.findByIdAndUpdate(req.params.id, req.body, { new: true }, function (err, user) {
         if (err) return res.status(500).send("There was a problem updating the user.");
-        res.status(200).send(user);
+        res.status(200).send({
+            user: {
+                id: user._id,
+                name: user.name,
+                lastName: user.lastName,
+                email: user.email,
+                year: user.year,
+            }
+        });
     });
 }
 
